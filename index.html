@@ -1,0 +1,44 @@
+<html>
+<style>
+      svg * {
+          fill: {FILL_COLOR} !important;
+      }
+</style>
+<body>
+    <div id="workspace"></div>
+    <script src="/libs/snap.svg-min.js"></script>
+    <script>
+    var drawingArea = Snap("#workspace");
+    Snap.load("{SVG_FILE}", function(fragment) {
+        var svgElement = fragment.select("svg");
+        drawingArea.append(svgElement);
+
+        var bBox = svgElement.getBBox();
+
+        var fiveFourty = svgElement.clone();
+        fiveFourty.addClass('fiveFourty');
+
+        fiveFourty.attr({
+            height: bBox.height * 0.75,
+            width: bBox.width * 0.75
+        });
+
+        var sevenTwenty = svgElement;
+        sevenTwenty.addClass('sevenTwenty');
+
+        var tenEighty = svgElement.clone();
+        tenEighty.addClass('tenEighty');
+
+        tenEighty.attr({
+            height: bBox.height * 1.5,
+            width: bBox.width * 1.5
+        });
+
+        drawingArea.append(fiveFourty);
+        drawingArea.append(sevenTwenty);
+        drawingArea.append(tenEighty);
+    });
+    </script>
+</body>
+
+</html>

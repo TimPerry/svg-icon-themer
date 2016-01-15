@@ -1,0 +1,36 @@
+#!/usr/bin/env node
+var http = require('http'),
+    fs = require('fs'),
+    spawn = require('child_process').spawn;
+
+var args = process.argv.slice(2);
+
+var SVG_FILE = args[0];
+var FILL_COLOR = args[1];
+
+var server = http.createServer(function(req, res) {
+    res.writeHead(200, {
+        "Content-Type": "text/html"
+    });
+    var file = req.url === '/' ? 'index.html' : "." + req.url;
+    fs.readFile(file, 'utf8', function(err, data) {
+    	if(file==='index.html') {
+    		data = data.replace("{FILL_COLOR}", FILL_COLOR).replace("{SVG_FILE}", SVG_FILE);
+    	}
+        res.end(data);
+    });
+});
+
+console.log("Starting server...");
+console.log("FILL_COLOR: ", FILL_COLOR);
+console.log("SVG_FILE: ", SVG_FILE);
+console.log("Generating files...");
+
+server.listen(8371, function(){
+	console.log("Capturing images...");
+	const ls = spawn('./node_modules/.bin/casperjs', ['capture.js']);
+	ls.on('close', function(code){
+		console.log("Done.");
+	 	process.exit();
+	});
+});
