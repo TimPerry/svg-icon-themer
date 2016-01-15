@@ -1,20 +1,44 @@
 #!/usr/bin/env node
 var http = require('http'),
     fs = require('fs'),
+    path = require('path'),
     spawn = require('child_process').spawn;
 
 var args = process.argv.slice(2);
 
-var SVG_FILE = args[0];
+var SVG_FILE = path.resolve(args[0]);
 var FILL_COLOR = args[1];
 
+function getFileName(url) {
+    if(url===SVG_FILE){
+        return SVG_FILE;
+    } else if (url === '/') {
+        return './index.html'
+    } else {
+        return '.' + url;
+    }
+}
+
+function getContentType(filename) {
+    if(filename===SVG_FILE){
+        return 'image/svg';
+    } else if (filename === './index.html') {
+        return 'text/html';
+    } else {
+        return 'application/javascript';
+    }
+}
+
 var server = http.createServer(function(req, res) {
-    res.writeHead(200, {
-        "Content-Type": "text/html"
-    });
-    var file = req.url === '/' ? 'index.html' : "." + req.url;
-    fs.readFile(file, 'utf8', function(err, data) {
-    	if(file==='index.html') {
+    var filename = getFileName(req.url);
+    fs.readFile(filename, 'utf8', function(err, data) {
+        if(err){
+            console.log("ERROR: ", err);
+        }
+        res.writeHead(200, {
+            "Content-Type": getContentType(filename)
+        });
+        if(filename==='./index.html') {
     		data = data.replace("{FILL_COLOR}", FILL_COLOR).replace("{SVG_FILE}", SVG_FILE);
     	}
         res.end(data);
