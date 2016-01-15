@@ -9,7 +9,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "./node_modules/.bin/casperjs generate.js"
+    "clean": "rm -rf *.png",
   },
   "author": "Tim Perry <me@timperry.co.uk> (http://www.timperry.co.uk)",
   "license": "ISC"
