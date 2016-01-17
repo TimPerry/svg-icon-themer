@@ -55,6 +55,7 @@ server.listen(8371, function(){
 	const ls = spawn('./node_modules/.bin/casperjs', ['capture.js']);
 	ls.on('close', function(code){
 		console.log("Done.");
+    spawn('/usr/bin/open', ['captures']);
 	 	process.exit();
 	});
 });
